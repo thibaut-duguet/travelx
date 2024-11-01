@@ -7,9 +7,11 @@ interface SearchInputProps {
   Icon: React.ElementType; // Accept any React component as an icon
   description: string; // Description text
   placeholder: string; // Placeholder text
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ Icon, description, placeholder }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ Icon, description, placeholder, value, onChange }) => {
   // Liste des suggestions disponibles
   const suggestions = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg'];
 
@@ -21,8 +23,9 @@ const SearchInput: React.FC<SearchInputProps> = ({ Icon, description, placeholde
 
   // Gestion de la saisie utilisateur
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    value = e.target.value;
     setInputValue(value);
+    onChange(e);
 
     // Filtrer les suggestions
     if (value) {
@@ -42,6 +45,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ Icon, description, placeholde
     setInputValue(suggestion);
     setFilteredSuggestions([]);
     setIsSuggestionVisible(false);
+    onChange({ target: { value: suggestion } } as React.ChangeEvent<HTMLInputElement>);
   };
 
   return (
@@ -55,7 +59,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ Icon, description, placeholde
               <input
                 type="text"
                 value={inputValue}
-                    onChange={handleInputChange}
+                onChange={handleInputChange}
                 onFocus={() => setIsFocused(true)} // Set focus state to true
                 onBlur={() => setIsFocused(false)}
                 className="w-full placeholder-poppins focus:outline-none"

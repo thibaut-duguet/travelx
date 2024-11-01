@@ -15,6 +15,9 @@ const config: Config = {
           600: '#092A5E',
           200: '#EFF3F8',// Couleur personnalisée
         },
+        gray: {
+          100: '#F6F6F6',
+        },
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'], // Add Poppins font

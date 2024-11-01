@@ -64,12 +64,31 @@ const HomePage = () => {
 
   const [isSearchActive, setIsSearchActive] = useState(true);
   const [results, setResults] = useState<{ id: number; destination: string; tags: string[]; destinationPicture: string; }[]>([]);
-  console.log("init")
-  console.log(isSearchActive);
-  console.log(results);
-  const handleSearch = () => {
+  const handleSearch = async (departureCity: string, destinationCity: string) => {
     setIsSearchActive(false);
     setResults(mockResults);
+    const input = `${departureCity} and ${destinationCity}`;
+    try {
+        // Call the API route instead of the OpenAI service directly
+        const response = await fetch('/api/openai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input }), // Send the input to the API
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json(); // Parse the JSON response
+        console.log(data);
+        // Assuming the response is structured correctly, set the results
+    } catch (error) {
+        console.error('Error fetching OpenAI response:', error);
+        // Handle error appropriately (e.g., show a message to the user)
+    }
   };
 
   return (
@@ -81,9 +100,9 @@ const HomePage = () => {
       
       <div className="mt-32">
         <h2 className="text-xl font-semibold font-poppins mb-4 pl-2">Partagez nous vos envies d’ailleurs 🌍</h2>
-        <SearchBar onSearch={handleSearch} isSearchActive={isSearchActive} />
+        <SearchBar onSearch={(departureCity, destinationCity) => handleSearch(departureCity, destinationCity)} isSearchActive={isSearchActive} />
         {!isSearchActive && results.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-16">
           {results.map(result => (
             <ResultCard key={result.id} destination={result.destination} tags={result.tags} destinationPicture={result.destinationPicture} />
           ))}

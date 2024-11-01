@@ -5,7 +5,7 @@ import SearchInput from './SearchInput'; // Importez votre composant SearchInput
 import { MdPlace, MdCalendarMonth } from 'react-icons/md'; // Importez l'icône que vous souhaitez utiliser
 
 interface SearchBarProps {
-  onSearch: () => void; // Prop pour la fonction de recherche
+  onSearch: (departureCity: string, destinationCity: string) => void; // Mise à jour de la prop pour accepter deux paramètres
   isSearchActive: boolean; // Ajout de la prop isSearchActive
 }
 
@@ -29,7 +29,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isSearchActive }) => {
             description="DESTINATION"
             placeholder="Où voulez-vous partir ?"
             value={destinationCity}
-            onChange={(e) => setDestinationCity(e.target.value)}
+            onChange={(e) => {
+              setDestinationCity(e.target.value)
+            }}
           />
           <SearchInput
             Icon={MdCalendarMonth}
@@ -39,7 +41,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isSearchActive }) => {
             onChange={(e) => setDuration(e.target.value)}
           />
           <button
-            onClick={onSearch}
+        onClick={() => {
+          onSearch(departureCity, destinationCity)
+        }}
             className="h-14 px-4 bg-blue-600 text-white font-poppins font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
           >
             Rechercher
